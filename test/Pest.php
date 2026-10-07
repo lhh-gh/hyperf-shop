@@ -11,7 +11,7 @@
 |
 */
 
-// uses(Tests\TestCase::class)->in('Feature');
+// uses(HyperfTest\TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
