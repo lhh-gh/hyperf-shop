@@ -39,6 +39,30 @@ docker run --rm -it -v $(pwd):/app composer create-project --ignore-platform-req
 
 # Getting started
 
+## 本地 DNMP 数据库与 Redis
+
+当前本地开发使用 DNMP 的 `dnmp2-hyperf-1` 容器，与 MySQL、Redis 共用 `dnmp` 网络。项目连接配置保存在 `.env`，`.env.example` 仅提供不含密码的模板。
+
+| 配置 | 当前本地值 |
+| --- | --- |
+| MySQL 地址 | `mysql80:3306` |
+| 数据库 | `hyperf_shop`，字符集 `utf8mb4`，排序规则 `utf8mb4_unicode_ci` |
+| MySQL 账号 | `hyperf_shop`，仅有项目数据库权限 |
+| Redis 地址 | `redis62:6379` |
+| Redis 逻辑库 | `5`，供本项目缓存、模型缓存和异步队列共用 |
+
+MySQL 项目账号密码和现有 Redis 密码均填写在本地 `.env` 中；不要提交该文件。新环境需先创建数据库、账号并授予项目库权限，再填写对应密码。Redis 逻辑库通过 `REDIS_DB` 选择，无需执行创建命令；其他项目应使用不同的逻辑库。
+
+从 WSL 启动当前项目：
+
+```bash
+docker exec -it -w /opt/www/hyperf-shop dnmp2-hyperf-1 php bin/hyperf.php start
+```
+
+如果直接使用 WSL 的 PHP 运行项目，将 `.env` 中 `DB_HOST` 和 `REDIS_HOST` 都改为 `127.0.0.1`，通过已发布的 `3306` 和 `6379` 端口连接。配置变更后，需要重启正在运行的 Hyperf 服务。
+
+以下为框架模板的通用启动方式；仓库自带的 `docker-compose.yml` 未连接 DNMP 网络，不能直接使用上面的容器域名配置。
+
 Once installed, you can run the server immediately using the command below.
 
 ```bash
